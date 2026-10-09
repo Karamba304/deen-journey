@@ -10,33 +10,91 @@
 
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as IndexRouteImport } from './routes/index'
+import { Route as CompteRouteImport } from './routes/compte'
+import { Route as ObjectifRouteImport } from './routes/objectif'
+import { Route as ParametresRouteImport } from './routes/parametres'
+import { Route as SadaqaRouteImport } from './routes/sadaqa'
+import { Route as SourcesRouteImport } from './routes/sources'
 
 const IndexRoute = IndexRouteImport.update({
   id: '/',
   path: '/',
   getParentRoute: () => rootRouteImport,
 } as any)
+const CompteRoute = CompteRouteImport.update({
+  id: '/compte',
+  path: '/compte',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ObjectifRoute = ObjectifRouteImport.update({
+  id: '/objectif',
+  path: '/objectif',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ParametresRoute = ParametresRouteImport.update({
+  id: '/parametres',
+  path: '/parametres',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const SadaqaRoute = SadaqaRouteImport.update({
+  id: '/sadaqa',
+  path: '/sadaqa',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const SourcesRoute = SourcesRouteImport.update({
+  id: '/sources',
+  path: '/sources',
+  getParentRoute: () => rootRouteImport,
+} as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
+  '/compte': typeof CompteRoute
+  '/objectif': typeof ObjectifRoute
+  '/parametres': typeof ParametresRoute
+  '/sadaqa': typeof SadaqaRoute
+  '/sources': typeof SourcesRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
+  '/compte': typeof CompteRoute
+  '/objectif': typeof ObjectifRoute
+  '/parametres': typeof ParametresRoute
+  '/sadaqa': typeof SadaqaRoute
+  '/sources': typeof SourcesRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
+  '/compte': typeof CompteRoute
+  '/objectif': typeof ObjectifRoute
+  '/parametres': typeof ParametresRoute
+  '/sadaqa': typeof SadaqaRoute
+  '/sources': typeof SourcesRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/'
+  fullPaths:
+    '/' | '/compte' | '/objectif' | '/parametres' | '/sadaqa' | '/sources'
   fileRoutesByTo: FileRoutesByTo
-  to: '/'
-  id: '__root__' | '/'
+  to: '/' | '/compte' | '/objectif' | '/parametres' | '/sadaqa' | '/sources'
+  id:
+    | '__root__'
+    | '/'
+    | '/compte'
+    | '/objectif'
+    | '/parametres'
+    | '/sadaqa'
+    | '/sources'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
+  CompteRoute: typeof CompteRoute
+  ObjectifRoute: typeof ObjectifRoute
+  ParametresRoute: typeof ParametresRoute
+  SadaqaRoute: typeof SadaqaRoute
+  SourcesRoute: typeof SourcesRoute
 }
 
 declare module '@tanstack/react-router' {
@@ -48,11 +106,51 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof IndexRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/compte': {
+      id: '/compte'
+      path: '/compte'
+      fullPath: '/compte'
+      preLoaderRoute: typeof CompteRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/objectif': {
+      id: '/objectif'
+      path: '/objectif'
+      fullPath: '/objectif'
+      preLoaderRoute: typeof ObjectifRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/parametres': {
+      id: '/parametres'
+      path: '/parametres'
+      fullPath: '/parametres'
+      preLoaderRoute: typeof ParametresRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/sadaqa': {
+      id: '/sadaqa'
+      path: '/sadaqa'
+      fullPath: '/sadaqa'
+      preLoaderRoute: typeof SadaqaRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/sources': {
+      id: '/sources'
+      path: '/sources'
+      fullPath: '/sources'
+      preLoaderRoute: typeof SourcesRouteImport
+      parentRoute: typeof rootRouteImport
+    }
   }
 }
 
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
+  CompteRoute: CompteRoute,
+  ObjectifRoute: ObjectifRoute,
+  ParametresRoute: ParametresRoute,
+  SadaqaRoute: SadaqaRoute,
+  SourcesRoute: SourcesRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
