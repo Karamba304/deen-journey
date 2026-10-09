@@ -11,5 +11,6 @@
 
 - Use TanStack Start file-based routes in src/routes rather than another router; the platform bootstrap depends on TanStack.
 - Keep the app name solely in src/config/app.ts, displayed text in src/content/fr.ts and navigation definitions in src/config/navigation.ts; this prevents duplication and prepares future localization.
-- Render shared navigation and one main element in AppLayout around the root Outlet; each content route uses SectionPage and a shared metadata helper.
+- Render shared navigation and one main element in AppLayout around the root Outlet; content routes use SectionPage with optional children and a shared metadata helper so Home can add content without altering the other pages.
 - Reuse the existing UI Button and Card primitives and shared content-state components; do not add backend dependencies for the initial shell.
+- Compose Home cards from existing Card, Button and Radix Collapsible primitives with independent local state; typed local content arrays keep unpopulated content unavailable without network calls.
