@@ -57,7 +57,7 @@
 .header-inner { max-width: 1440px; margin: 0 auto; min-height: 96px; display: grid; grid-template-columns: minmax(160px, 1fr) auto minmax(24px, 1fr); align-items: center; padding-inline: max(40px, env(safe-area-inset-left)) max(40px, env(safe-area-inset-right)); }
 .app-name { display: flex; align-items: center; gap: 12px; white-space: nowrap; font-size: 30px; font-weight: 500; }
 .brand-mark { width: 4px; height: 4px; background: var(--primary); transform: rotate(45deg); }
-.app-nav { display: flex; min-width: 0; overflow-x: auto; position: relative; scrollbar-width: thin; scrollbar-color: var(--border) transparent; scroll-padding-inline: 8px; }
+.app-nav { display: flex; min-width: 0; overflow-x: auto; overscroll-behavior-x: contain; position: relative; scrollbar-width: thin; scrollbar-color: var(--border) transparent; scroll-padding-inline: 8px; }
 .nav-item { position: relative; flex: 0 0 auto; min-height: 96px; min-width: 96px; padding: 17px 20px; display: flex; flex-direction: column; gap: 9px; border-radius: 0; font-size: 12px; font-weight: 500; color: var(--muted-foreground); }
 .nav-item svg { width: 21px; height: 21px; }
 .nav-item:hover { background: var(--card); color: var(--foreground); }
@@ -78,7 +78,7 @@
 .skip-link:focus { transform: translateY(0); outline: 2px solid var(--foreground); }
 @media (max-width: 1100px) {
   .header-inner { grid-template-columns: auto minmax(0, 1fr); gap: 28px; padding-inline: 24px; }
-  .app-nav { justify-content: flex-end; }
+  .app-nav { justify-content: flex-start; }
   .nav-item { min-width: 86px; padding-inline: 16px; }
 }
 @media (max-width: 767px) {
