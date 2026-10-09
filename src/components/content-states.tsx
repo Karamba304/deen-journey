@@ -9,6 +9,6 @@ export function ErrorMessage({ message = content.error }: { message?: string }) 
   return <p role="alert" className="text-destructive">{message}</p>;
 }
 
-export function UnavailableState() {
-  return <p className="unavailable-message text-muted-foreground">{content.unavailable}</p>;
+export function UnavailableState({ message = content.unavailable, className = "unavailable-message" }: { message?: string; className?: string }) {
+  return <p className={`${className} text-muted-foreground`}>{message}</p>;
 }
