@@ -8,6 +8,8 @@ import { content } from "@/content/fr";
 import { sunnas } from "@/content/sunnas";
 import { rappels } from "@/content/rappels";
 import { lecons } from "@/content/lecons";
+import { PrayerDetails, PrayerSummary } from "@/components/prayer-times";
+import { usePrayerTimes } from "@/lib/use-prayer-times";
 
 const copy = content.homeCards;
 
@@ -102,7 +104,7 @@ function LearningContent() {
 
 export function HomeCards() {
   return <div className="mt-10 grid min-w-0 grid-cols-1 items-start gap-5 md:grid-cols-2">
-    <HomeCard icon={Clock3} text={copy.prayers}><PrayerContent /></HomeCard>
+    <PrayerCard />
     <HomeCard icon={Sparkles} text={copy.sunna}><SunnaContent /></HomeCard>
     <HomeCard icon={BookOpen} text={copy.reminder}><ReminderContent /></HomeCard>
     <HomeCard icon={GraduationCap} text={copy.learning}><LearningContent /></HomeCard>
