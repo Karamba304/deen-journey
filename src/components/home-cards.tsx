@@ -36,7 +36,7 @@ function HomeCard({ icon: Icon, text, summary, children }: {
             {summary ?? <>
               <span className="mt-3 block text-sm font-normal leading-relaxed text-muted-foreground">{text.invitation}</span>
               <span className="mt-5 block text-xs font-medium text-foreground">{text.action}</span>
-            </>
+            </>}
           </Button>
         </CollapsibleTrigger>
         <CollapsibleContent id={`${id}-content`} role="region" aria-labelledby={`${id}-trigger`} className="home-card-panel">
