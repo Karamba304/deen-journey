@@ -8,12 +8,15 @@ import { content } from "@/content/fr";
 import { sunnas } from "@/content/sunnas";
 import { rappels } from "@/content/rappels";
 import { lecons } from "@/content/lecons";
+import { PrayerDetails, PrayerSummary } from "@/components/prayer-times";
+import { usePrayerTimes } from "@/lib/use-prayer-times";
 
 const copy = content.homeCards;
 
-function HomeCard({ icon: Icon, text, children }: {
+function HomeCard({ icon: Icon, text, summary, children }: {
   icon: LucideIcon;
   text: { title: string; invitation: string; action: string };
+  summary?: ReactNode;
   children: ReactNode;
 }) {
   const [open, setOpen] = useState(false);
@@ -30,8 +33,10 @@ function HomeCard({ icon: Icon, text, children }: {
               </span>
               <ChevronDown aria-hidden="true" className="home-card-chevron shrink-0 text-muted-foreground" />
             </span>
-            <span className="mt-3 block text-sm font-normal leading-relaxed text-muted-foreground">{text.invitation}</span>
-            <span className="mt-5 block text-xs font-medium text-foreground">{text.action}</span>
+            {summary ?? <>
+              <span className="mt-3 block text-sm font-normal leading-relaxed text-muted-foreground">{text.invitation}</span>
+              <span className="mt-5 block text-xs font-medium text-foreground">{text.action}</span>
+            </>}
           </Button>
         </CollapsibleTrigger>
         <CollapsibleContent id={`${id}-content`} role="region" aria-labelledby={`${id}-trigger`} className="home-card-panel">
@@ -62,14 +67,13 @@ function TeamBlock({ children }: { children: ReactNode }) {
   </div>;
 }
 
-function PrayerContent() {
-  return <>
-    <dl className="space-y-3">
-      {copy.prayerNames.map((name) => <div key={name} className="grid grid-cols-[minmax(0,1fr)_auto] gap-4"><dt>{name}</dt><dd className="text-muted-foreground">{copy.timePlaceholder}</dd></div>)}
-    </dl>
-    <p className="mb-0 mt-5 text-xs leading-relaxed text-muted-foreground">{copy.prayerNotice}</p>
-  </>;
+function PrayerCard() {
+  const state = usePrayerTimes();
+  return <HomeCard icon={Clock3} text={copy.prayers} summary={state.next ? <PrayerSummary state={state} /> : undefined}>
+    <PrayerDetails state={state} />
+  </HomeCard>;
 }
+
 
 function SunnaContent() {
   if (sunnas.length === 0) return <EmptyContent />;
@@ -100,7 +104,7 @@ function LearningContent() {
 
 export function HomeCards() {
   return <div className="mt-10 grid min-w-0 grid-cols-1 items-start gap-5 md:grid-cols-2">
-    <HomeCard icon={Clock3} text={copy.prayers}><PrayerContent /></HomeCard>
+    <PrayerCard />
     <HomeCard icon={Sparkles} text={copy.sunna}><SunnaContent /></HomeCard>
     <HomeCard icon={BookOpen} text={copy.reminder}><ReminderContent /></HomeCard>
     <HomeCard icon={GraduationCap} text={copy.learning}><LearningContent /></HomeCard>
