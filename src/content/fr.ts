@@ -14,7 +14,7 @@ export const content = {
     prayers: { title: "Horaires de prière", invitation: "Consultez les horaires de la journée.", action: "Voir les horaires" },
     sunna: { title: "Sunna du jour", invitation: "Découvrez une pratique à mettre en œuvre aujourd'hui.", action: "Découvrir" },
     reminder: { title: "Rappel du jour", invitation: "Consultez le rappel du jour.", action: "Lire le rappel" },
-    learning: { title: "1 Jour · 2 Leçons · 3 Questions", invitation: "Deux leçons, trois questions par leçon.", action: "Commencer" },
+    learning: { title: "Ton apprentissage du jour", invitation: "1 Jour · 2 Leçons · 3 Questions", action: "Commencer" },
     prayerTimes: {
       nextPrayer: "Prochaine prière",
       nextTomorrow: "Prochaine prière : demain",
