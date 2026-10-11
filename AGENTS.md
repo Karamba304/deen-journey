@@ -14,3 +14,4 @@
 - Render shared navigation and one main element in AppLayout around the root Outlet; content routes use SectionPage with optional children and a shared metadata helper so Home can add content without altering the other pages.
 - Reuse the existing UI Button and Card primitives and shared content-state components; do not add backend dependencies for the initial shell.
 - Compose Home cards from existing Card, Button and Radix Collapsible primitives with independent local state; typed local content arrays keep unpopulated content unavailable without network calls.
+- Prayer times are fetched client-side from AlAdhan only (config in src/config/prieres.ts, pure logic in src/lib/prayer-times.ts, state in src/lib/use-prayer-times.ts); browser storage is read after hydration and never shows another day's times.
