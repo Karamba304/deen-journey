@@ -7,7 +7,7 @@ export type DayTimings = { timings: Timings; timezone: string | null };
 
 const STORAGE_PREFIX = "mondeen.prieres.";
 const LOCATION_KEY = `${STORAGE_PREFIX}lieu`;
-const METHOD_KEY = `${STORAGE_PREFIX}methode`;
+const METHOD_KEY = `${STORAGE_PREFIX}methode.v2`;
 const DONE_PREFIX = `${STORAGE_PREFIX}accomplies.`;
 
 function pad(n: number) { return String(n).padStart(2, "0"); }
