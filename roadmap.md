@@ -7,3 +7,5 @@
 - [x] Add four independent Home cards using existing primitives and centralized copy.
 - [x] Prepare empty typed sunna, reminder and lesson content with separated religious/team fields.
 - [x] Verify clicks, keyboard toggles, empty states, prayer placeholders and desktop/phone layouts without changing other pages.
+# Lot 3
+- [x] Real AlAdhan prayer times (city/GPS), method selector, local checkboxes, day rollover, errors without fake times.

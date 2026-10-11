@@ -70,7 +70,12 @@ export async function fetchPrayerTimes(location: PrayerLocation, date: Date, met
   }
 }
 
-export function toMinutes(time: string) { const [h, m] = time.split(":").map(Number); return h * 60 + m; }
+/** Les heures sont validées par cleanTime avant usage ; un format invalide lève une erreur (aucune heure inventée). */
+export function toMinutes(time: string) {
+  const match = /^([01]\d|2[0-3]):([0-5]\d)$/.exec(time);
+  if (!match) throw new Error("Heure invalide");
+  return Number(match[1]) * 60 + Number(match[2]);
+}
 
 /** Minutes écoulées depuis minuit dans le fuseau donné (ou celui de l'appareil). */
 export function minutesNow(now: Date, timezone: string | null) {
