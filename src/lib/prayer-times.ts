@@ -1,4 +1,5 @@
-import { CALCULATION_METHODS, CITY_MAX_LENGTH, DEFAULT_METHOD_ID, PRAYER_API_BASE, PRAYER_API_TIMEOUT_MS, PRAYER_KEYS, type PrayerKey } from "@/config/prieres";
+import { AJUSTEMENT_MAGHRIB_MINUTES, ANGLE_FAJR, ANGLE_ISHA, APP_SETTING_ID, CALCULATION_METHODS, CITY_MAX_LENGTH, CUSTOM_API_METHOD, DEFAULT_METHOD_ID, PRAYER_API_BASE, PRAYER_API_TIMEOUT_MS, PRAYER_KEYS, type PrayerKey } from "@/config/prieres";
+import { content } from "@/content/fr";
 
 export type PrayerLocation = { kind: "city"; city: string } | { kind: "gps"; latitude: number; longitude: number };
 export type Timings = Record<PrayerKey, string>;
@@ -22,13 +23,25 @@ export function validateCity(value: string): string | null {
 }
 
 export function isValidMethod(id: number) { return CALCULATION_METHODS.some((m) => m.id === id); }
-export function methodName(id: number) { return CALCULATION_METHODS.find((m) => m.id === id)?.name ?? ""; }
+export function methodName(id: number) {
+  if (id === APP_SETTING_ID) return content.homeCards.prayerTimes.appSetting(ANGLE_FAJR, ANGLE_ISHA, AJUSTEMENT_MAGHRIB_MINUTES);
+  return CALCULATION_METHODS.find((m) => m.id === id)?.name ?? "";
+}
+
+/** Paramètres « method » (et réglages personnalisés) envoyés à AlAdhan. */
+export function methodParams(method: number): Record<string, string> {
+  if (method !== APP_SETTING_ID) return { method: String(method) };
+  // Ordre officiel tune : Imsak, Fajr, Sunrise, Dhuhr, Asr, Maghrib, Sunset, Isha, Midnight.
+  const tune = [0, 0, 0, 0, 0, AJUSTEMENT_MAGHRIB_MINUTES, 0, 0, 0];
+  return { method: String(CUSTOM_API_METHOD), methodSettings: `${ANGLE_FAJR},null,${ANGLE_ISHA}`, tune: tune.join(",") };
+}
 
 export function buildPrayerUrl(location: PrayerLocation, date: Date, method: number) {
-  if (location.kind === "city") {
-    return `${PRAYER_API_BASE}/timingsByAddress/${apiDate(date)}?${new URLSearchParams({ address: location.city, method: String(method) })}`;
-  }
-  return `${PRAYER_API_BASE}/timings/${apiDate(date)}?${new URLSearchParams({ latitude: String(location.latitude), longitude: String(location.longitude), method: String(method) })}`;
+  const params = location.kind === "city"
+    ? { address: location.city, ...methodParams(method) }
+    : { latitude: String(location.latitude), longitude: String(location.longitude), ...methodParams(method) };
+  const query = new URLSearchParams(params).toString().replace(/%2C/g, ",");
+  return `${PRAYER_API_BASE}/${location.kind === "city" ? "timingsByAddress" : "timings"}/${apiDate(date)}?${query}`;
 }
 
 /** Garde uniquement les 5 premiers caractères (HH:mm) et refuse toute valeur invalide. */

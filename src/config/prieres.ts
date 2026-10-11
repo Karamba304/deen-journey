@@ -1,10 +1,22 @@
 export const PRAYER_API_BASE = "https://api.aladhan.com/v1";
 export const PRAYER_API_TIMEOUT_MS = 10_000;
 
+/** Réglage de l'application (méthode personnalisée AlAdhan 99). */
+export const ANGLE_FAJR = 17.5;
+export const ANGLE_ISHA = 15;
+export const AJUSTEMENT_MAGHRIB_MINUTES = 4;
+/** Garde-fou : false = retour à la méthode 12 par défaut. */
+export const UTILISER_REGLAGE_APP_PAR_DEFAUT = true;
+
+/** Identifiant interne du réglage de l'application (jamais envoyé tel quel : l'appel utilise method=99). */
+export const APP_SETTING_ID = -1;
+export const CUSTOM_API_METHOD = 99;
+
 /** Choix provisoire en attendant la page Paramètres, pas une référence religieuse. */
-export const DEFAULT_METHOD_ID = 12;
+export const DEFAULT_METHOD_ID = UTILISER_REGLAGE_APP_PAR_DEFAUT ? APP_SETTING_ID : 12;
 
 export const CALCULATION_METHODS = [
+  { id: APP_SETTING_ID, name: "app" },
   { id: 0, name: "Shia Ithna-Ashari (Leva Institute, Qum)" },
   { id: 1, name: "University of Islamic Sciences, Karachi" },
   { id: 2, name: "Islamic Society of North America (ISNA)" },
