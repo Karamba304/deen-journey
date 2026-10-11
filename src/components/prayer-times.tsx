@@ -29,16 +29,16 @@ function LocationPicker({ state }: { state: PrayerState }) {
   const [showCity, setShowCity] = useState(false);
   const [city, setCity] = useState("");
   const [cityError, setCityError] = useState<string | null>(null);
-  const [gpsError, setGpsError] = useState(false);
+  const [gpsError, setGpsError] = useState<string | null>(null);
   const [locating, setLocating] = useState(false);
 
   const useGps = () => {
-    setGpsError(false);
-    if (!("geolocation" in navigator)) { setGpsError(true); setShowCity(true); return; }
+    setGpsError(null);
+    if (!("geolocation" in navigator)) { setGpsError(copy.gpsUnavailable); setShowCity(true); return; }
     setLocating(true);
     navigator.geolocation.getCurrentPosition(
       (pos) => { setLocating(false); state.setLocation({ kind: "gps", latitude: pos.coords.latitude, longitude: pos.coords.longitude }); },
-      () => { setLocating(false); setGpsError(true); setShowCity(true); },
+      (err) => { setLocating(false); setGpsError(err.code === 1 ? copy.gpsDenied : err.code === 3 ? copy.gpsTimeout : copy.gpsUnavailable); setShowCity(true); },
       { timeout: 10_000, maximumAge: 0 },
     );
   };
@@ -58,7 +58,7 @@ function LocationPicker({ state }: { state: PrayerState }) {
       <Button type="button" variant="outline" className="min-h-11" onClick={() => setShowCity(true)} aria-expanded={showCity}>{copy.enterCity}</Button>
     </div>
     {locating && <p role="status" className="m-0 text-muted-foreground">{copy.gpsLocating}</p>}
-    {gpsError && <p role="alert" className="m-0 text-destructive">{copy.gpsDenied}</p>}
+    {gpsError && <p role="alert" className="m-0 text-destructive">{gpsError}</p>}
     {showCity && <form onSubmit={submit} noValidate className="space-y-2">
       <label htmlFor={`${id}-city`} className="block text-xs text-muted-foreground">{copy.cityLabel}</label>
       <div className="flex flex-wrap gap-3">
@@ -118,7 +118,7 @@ export function PrayerDetails({ state }: { state: PrayerState }) {
       <label htmlFor={`${id}-method`} className="block text-xs text-muted-foreground">{copy.methodLabel}</label>
       <select id={`${id}-method`} value={state.method} onChange={(e) => state.setMethod(Number(e.target.value))}
         className="h-11 w-full min-w-0 rounded-md border border-input bg-background px-3 text-sm text-foreground focus-visible:outline-2 focus-visible:outline-primary">
-        {CALCULATION_METHODS.map((m) => <option key={m.id} value={m.id}>{m.name}</option>)}
+        {CALCULATION_METHODS.map((m) => <option key={m.id} value={m.id}>{methodName(m.id)}</option>)}
       </select>
       <p className="m-0 text-xs text-muted-foreground">{copy.methodNotice}</p>
     </div>

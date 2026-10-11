@@ -1,5 +1,5 @@
 import { useCallback, useEffect, useState } from "react";
-import type { PrayerKey } from "@/config/prieres";
+import { DEFAULT_METHOD_ID, type PrayerKey } from "@/config/prieres";
 import {
   clearLocation, computeNextPrayer, dayKey, fetchPrayerTimes, loadDone, loadLocation, loadMethod, minutesNow,
   purgeOldDone, saveDone, saveLocation, saveMethod, toMinutes, type DayTimings, type PrayerLocation,
@@ -11,7 +11,7 @@ type Tomorrow = { status: "idle" | "loading" | "ready" | "error"; fajr: string |
 export function usePrayerTimes() {
   const [hydrated, setHydrated] = useState(false);
   const [location, setLocationState] = useState<PrayerLocation | null>(null);
-  const [method, setMethodState] = useState(12);
+  const [method, setMethodState] = useState(DEFAULT_METHOD_ID);
   const [now, setNow] = useState<Date | null>(null);
   const [today, setToday] = useState<string | null>(null);
   const [status, setStatus] = useState<Status>("idle");
