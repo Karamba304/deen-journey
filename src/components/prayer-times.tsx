@@ -1,4 +1,6 @@
 import { useId, useState, type FormEvent } from "react";
+import { Link } from "@tanstack/react-router";
+import { useSettings } from "@/lib/settings-context";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { ErrorMessage, LoadingState } from "@/components/content-states";
@@ -24,7 +26,8 @@ export function PrayerSummary({ state }: { state: PrayerState }) {
   </span>;
 }
 
-function LocationPicker({ state }: { state: PrayerState }) {
+export function LocationPicker() {
+  const { setLocation } = useSettings();
   const id = useId();
   const [showCity, setShowCity] = useState(false);
   const [city, setCity] = useState("");
@@ -37,7 +40,7 @@ function LocationPicker({ state }: { state: PrayerState }) {
     if (!("geolocation" in navigator)) { setGpsError(copy.gpsUnavailable); setShowCity(true); return; }
     setLocating(true);
     navigator.geolocation.getCurrentPosition(
-      (pos) => { setLocating(false); state.setLocation({ kind: "gps", latitude: pos.coords.latitude, longitude: pos.coords.longitude }); },
+      (pos) => { setLocating(false); setLocation({ kind: "gps", latitude: pos.coords.latitude, longitude: pos.coords.longitude }); },
       (err) => { setLocating(false); setGpsError(err.code === 1 ? copy.gpsDenied : err.code === 3 ? copy.gpsTimeout : copy.gpsUnavailable); setShowCity(true); },
       { timeout: 10_000, maximumAge: 0 },
     );
@@ -48,7 +51,7 @@ function LocationPicker({ state }: { state: PrayerState }) {
     const valid = validateCity(city);
     if (!valid) { setCityError(city.trim().length === 0 ? copy.cityEmpty : copy.cityTooLong); return; }
     setCityError(null);
-    state.setLocation({ kind: "city", city: valid });
+    setLocation({ kind: "city", city: valid });
   };
 
   return <div className="space-y-4">
@@ -75,7 +78,7 @@ function LocationPicker({ state }: { state: PrayerState }) {
 export function PrayerDetails({ state }: { state: PrayerState }) {
   const id = useId();
   if (!state.hydrated) return <LoadingState />;
-  if (!state.location) return <LocationPicker state={state} />;
+  if (!state.location) return <LocationPicker />;
 
   const place = state.location.kind === "city" ? state.location.city : copy.currentPosition;
   const nextKey = state.next && !state.next.tomorrow ? state.next.key : null;
@@ -112,17 +115,27 @@ export function PrayerDetails({ state }: { state: PrayerState }) {
       <p className="m-0 text-xs text-muted-foreground">{copy.checksNotice}</p>
     </div>}
 
-    <p className="m-0 text-xs text-muted-foreground">{copy.methodUsed} : <span className="text-foreground">{methodName(state.method)}</span></p>
+    <p className="m-0 flex flex-wrap items-center gap-x-3 text-xs text-muted-foreground">
+      <span>{copy.calculation} <span className="text-foreground">{methodName(state.method)}</span></span>
+      <Link to="/parametres" className="inline-flex min-h-11 items-center text-foreground underline underline-offset-4 focus-visible:outline-2 focus-visible:outline-primary">{copy.editInSettings}</Link>
+    </p>
 
-    <div className="space-y-2">
-      <label htmlFor={`${id}-method`} className="block text-xs text-muted-foreground">{copy.methodLabel}</label>
-      <select id={`${id}-method`} value={state.method} onChange={(e) => state.setMethod(Number(e.target.value))}
-        className="h-11 w-full min-w-0 rounded-md border border-input bg-background px-3 text-sm text-foreground focus-visible:outline-2 focus-visible:outline-primary">
-        {CALCULATION_METHODS.map((m) => <option key={m.id} value={m.id}>{methodName(m.id)}</option>)}
-      </select>
-      <p className="m-0 text-xs text-muted-foreground">{copy.methodNotice}</p>
-    </div>
+    <p className="m-0 text-xs text-muted-foreground">{copy.methodNotice}</p>
 
     <Button type="button" variant="outline" className="min-h-11" onClick={state.resetLocation}>{copy.changeLocation}</Button>
+  </div>;
+}
+
+/** Sélecteur de méthode relié aux réglages partagés. */
+export function MethodSelect() {
+  const { method, setMethod } = useSettings();
+  const id = useId();
+  return <div className="space-y-2">
+    <label htmlFor={id} className="block text-sm text-foreground">{copy.methodLabel}</label>
+    <select id={id} value={method} onChange={(e) => setMethod(Number(e.target.value))}
+      className="h-11 w-full min-w-0 rounded-md border border-input bg-background px-3 text-sm text-foreground focus-visible:outline-2 focus-visible:outline-primary">
+      {CALCULATION_METHODS.map((m) => <option key={m.id} value={m.id}>{methodName(m.id)}</option>)}
+    </select>
+    <p className="m-0 text-xs text-muted-foreground">{copy.methodNotice}</p>
   </div>;
 }

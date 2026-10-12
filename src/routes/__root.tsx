@@ -15,6 +15,7 @@ import { reportLovableError } from "../lib/lovable-error-reporting";
 import { APP_NAME } from "@/config/app";
 import { content } from "@/content/fr";
 import { AppLayout } from "@/components/app-layout";
+import { SettingsProvider } from "@/lib/settings-context";
 import { Button } from "@/components/ui/button";
 
 function NotFoundComponent() {
@@ -95,7 +96,7 @@ function RootComponent() {
 
   return (
     <QueryClientProvider client={queryClient}>
-      <AppLayout><Outlet /></AppLayout>
+      <SettingsProvider><AppLayout><Outlet /></AppLayout></SettingsProvider>
     </QueryClientProvider>
   );
 }

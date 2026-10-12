@@ -1,17 +1,15 @@
 import { useCallback, useEffect, useState } from "react";
-import { DEFAULT_METHOD_ID, type PrayerKey } from "@/config/prieres";
+import type { PrayerKey } from "@/config/prieres";
 import {
-  clearLocation, computeNextPrayer, dayKey, fetchPrayerTimes, loadDone, loadLocation, loadMethod, minutesNow,
-  purgeOldDone, saveDone, saveLocation, saveMethod, toMinutes, type DayTimings, type PrayerLocation,
+  computeNextPrayer, dayKey, fetchPrayerTimes, loadDone, minutesNow, purgeOldDone, saveDone, toMinutes, type DayTimings,
 } from "@/lib/prayer-times";
+import { useSettings } from "@/lib/settings-context";
 
 type Status = "idle" | "loading" | "ready" | "error";
 type Tomorrow = { status: "idle" | "loading" | "ready" | "error"; fajr: string | null };
 
 export function usePrayerTimes() {
-  const [hydrated, setHydrated] = useState(false);
-  const [location, setLocationState] = useState<PrayerLocation | null>(null);
-  const [method, setMethodState] = useState(DEFAULT_METHOD_ID);
+  const { hydrated, location, method, setLocation, resetLocation } = useSettings();
   const [now, setNow] = useState<Date | null>(null);
   const [today, setToday] = useState<string | null>(null);
   const [status, setStatus] = useState<Status>("idle");
@@ -20,15 +18,13 @@ export function usePrayerTimes() {
   const [done, setDone] = useState<PrayerKey[]>([]);
   const [attempt, setAttempt] = useState(0);
 
-  // Lecture du stockage après hydratation, jamais pendant le rendu serveur.
+  // Horloge initialisée après hydratation, jamais pendant le rendu serveur.
   useEffect(() => {
+    if (!hydrated) return;
     const d = new Date();
-    setLocationState(loadLocation());
-    setMethodState(loadMethod());
     setNow(d);
     setToday(dayKey(d));
-    setHydrated(true);
-  }, []);
+  }, [hydrated]);
 
   // Horloge : mise à jour chaque minute, et au retour sur l'onglet. Détecte le changement de jour.
   useEffect(() => {
@@ -81,9 +77,6 @@ export function usePrayerTimes() {
     ? computeNextPrayer(data.timings, nowMinutes, tomorrow.fajr)
     : null;
 
-  const setLocation = useCallback((value: PrayerLocation) => { saveLocation(value); setLocationState(value); }, []);
-  const resetLocation = useCallback(() => { clearLocation(); setLocationState(null); }, []);
-  const setMethod = useCallback((id: number) => { saveMethod(id); setMethodState(id); }, []);
   const retry = useCallback(() => setAttempt((n) => n + 1), []);
   const toggleDone = useCallback((key: PrayerKey, checked: boolean) => {
     if (!today) return;
@@ -94,5 +87,5 @@ export function usePrayerTimes() {
     });
   }, [today]);
 
-  return { hydrated, location, method, now, status, data, next, done, setLocation, resetLocation, setMethod, retry, toggleDone };
+  return { hydrated, location, method, now, status, data, next, done, setLocation, resetLocation, retry, toggleDone };
 }
