@@ -13,5 +13,5 @@
 - [x] Settings page (location + method) with shared settings state; Home card shows read-only method with link.
 
 # Lot 5
-- [ ] Disable calculated prayer UI, API and geolocation behind one reversible switch without deleting code.
-- [ ] Verify three Home cards, unavailable Settings and tests for both switch states.
+- [x] Disable calculated prayer UI, API and geolocation behind one reversible switch without deleting code.
+- [x] Verify three Home cards, unavailable Settings and tests for both switch states.
