@@ -16,3 +16,4 @@
 - Compose Home cards from existing Card, Button and Radix Collapsible primitives with independent local state; typed local content arrays keep unpopulated content unavailable without network calls.
 - Prayer times are fetched client-side from AlAdhan only (config in src/config/prieres.ts, pure logic in src/lib/prayer-times.ts, state in src/lib/use-prayer-times.ts); browser storage is read after hydration and never shows another day's times.
 - App settings (location, prayer method) live in one typed object under one storage key (src/lib/settings.ts), shared through SettingsProvider in __root; add future settings there only, and show none that is not wired to a feature.
+- Gate calculated prayer UI, hook effects, API fetches and geolocation with AFFICHER_HORAIRES_CALCULES so disabling the feature preserves reusable code without hidden activity.

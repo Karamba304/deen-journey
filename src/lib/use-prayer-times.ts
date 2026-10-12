@@ -1,5 +1,5 @@
 import { useCallback, useEffect, useState } from "react";
-import type { PrayerKey } from "@/config/prieres";
+import { AFFICHER_HORAIRES_CALCULES, type PrayerKey } from "@/config/prieres";
 import {
   computeNextPrayer, dayKey, fetchPrayerTimes, loadDone, minutesNow, purgeOldDone, saveDone, toMinutes, type DayTimings,
 } from "@/lib/prayer-times";
@@ -20,7 +20,7 @@ export function usePrayerTimes() {
 
   // Horloge initialisée après hydratation, jamais pendant le rendu serveur.
   useEffect(() => {
-    if (!hydrated) return;
+    if (!AFFICHER_HORAIRES_CALCULES || !hydrated) return;
     const d = new Date();
     setNow(d);
     setToday(dayKey(d));
@@ -28,7 +28,7 @@ export function usePrayerTimes() {
 
   // Horloge : mise à jour chaque minute, et au retour sur l'onglet. Détecte le changement de jour.
   useEffect(() => {
-    if (!hydrated) return;
+    if (!AFFICHER_HORAIRES_CALCULES || !hydrated) return;
     const tick = () => { const d = new Date(); setNow(d); setToday(dayKey(d)); };
     let interval: ReturnType<typeof setInterval> | undefined;
     const timeout = setTimeout(() => { tick(); interval = setInterval(tick, 60_000); }, 60_000 - (Date.now() % 60_000));
@@ -39,14 +39,14 @@ export function usePrayerTimes() {
 
   // Cases du jour : rechargées et anciennes dates supprimées à chaque nouveau jour.
   useEffect(() => {
-    if (!today) return;
+    if (!AFFICHER_HORAIRES_CALCULES || !today) return;
     purgeOldDone(today);
     setDone(loadDone(today));
   }, [today]);
 
   // Horaires du jour : aucune donnée d'un autre jour n'est conservée.
   useEffect(() => {
-    if (!location || !today) { setStatus("idle"); setData(null); return; }
+    if (!AFFICHER_HORAIRES_CALCULES || !location || !today) { setStatus("idle"); setData(null); return; }
     const controller = new AbortController();
     setStatus("loading");
     setData(null);
@@ -62,7 +62,7 @@ export function usePrayerTimes() {
 
   // Après Isha : second appel pour le Fajr du lendemain.
   useEffect(() => {
-    if (!ishaPassed || !location || tomorrow.status !== "idle") return;
+    if (!AFFICHER_HORAIRES_CALCULES || !ishaPassed || !location || tomorrow.status !== "idle") return;
     const controller = new AbortController();
     setTomorrow({ status: "loading", fajr: null });
     const date = new Date();

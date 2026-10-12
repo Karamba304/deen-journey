@@ -1,10 +1,15 @@
 import { cleanup, fireEvent, render, screen } from "@testing-library/react";
-import { afterEach, describe, expect, it } from "vitest";
+import { afterEach, describe, expect, it, vi } from "vitest";
 import { MethodSelect } from "@/components/prayer-times";
 import { APP_SETTING_ID } from "@/config/prieres";
 import { SETTINGS_KEY } from "@/lib/settings";
 import { SettingsProvider } from "@/lib/settings-context";
 import { usePrayerTimes } from "@/lib/use-prayer-times";
+
+vi.mock("@/config/prieres", async (importOriginal) => ({
+  ...await importOriginal<typeof import("@/config/prieres")>(),
+  AFFICHER_HORAIRES_CALCULES: true,
+}));
 
 afterEach(() => { cleanup(); localStorage.clear(); });
 
@@ -23,6 +28,6 @@ describe("Shared settings", () => {
     render(<SettingsProvider><MethodSelect /><HomeMethodProbe /></SettingsProvider>);
     fireEvent.change(screen.getByLabelText("Méthode de calcul des prières"), { target: { value: "3" } });
     expect(screen.getByTestId("home-method").textContent).toBe("3");
-    expect(JSON.parse(localStorage.getItem(SETTINGS_KEY)!)).toEqual({ location: null, method: 3 });
+    expect(JSON.parse(localStorage.getItem(SETTINGS_KEY) ?? "null")).toEqual({ location: null, method: 3 });
   });
 });

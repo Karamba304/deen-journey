@@ -1,5 +1,6 @@
 import { AJUSTEMENT_MAGHRIB_MINUTES, ANGLE_FAJR, ANGLE_ISHA, APP_SETTING_ID, CALCULATION_METHODS, CITY_MAX_LENGTH, CUSTOM_API_METHOD, DEFAULT_METHOD_ID, PRAYER_API_BASE, PRAYER_API_TIMEOUT_MS, PRAYER_KEYS, type PrayerKey } from "@/config/prieres";
 import { content } from "@/content/fr";
+import { AFFICHER_HORAIRES_CALCULES } from "@/config/prieres";
 
 export type PrayerLocation = { kind: "city"; city: string } | { kind: "gps"; latitude: number; longitude: number };
 export type Timings = Record<PrayerKey, string>;
@@ -69,6 +70,7 @@ function isValidTimezone(tz: string) {
 }
 
 export async function fetchPrayerTimes(location: PrayerLocation, date: Date, method: number, signal?: AbortSignal): Promise<DayTimings> {
+  if (!AFFICHER_HORAIRES_CALCULES) throw new Error("Horaires calculés désactivés");
   const controller = new AbortController();
   const timer = setTimeout(() => controller.abort(), PRAYER_API_TIMEOUT_MS);
   const onAbort = () => controller.abort();

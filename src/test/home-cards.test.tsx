@@ -1,7 +1,12 @@
 import { cleanup, fireEvent, render, screen } from "@testing-library/react";
-import { afterEach, describe, expect, it } from "vitest";
+import { afterEach, describe, expect, it, vi } from "vitest";
 import { HomeCards } from "@/components/home-cards";
 import { SettingsProvider } from "@/lib/settings-context";
+
+vi.mock("@/config/prieres", async (importOriginal) => ({
+  ...await importOriginal<typeof import("@/config/prieres")>(),
+  AFFICHER_HORAIRES_CALCULES: true,
+}));
 
 afterEach(cleanup);
 

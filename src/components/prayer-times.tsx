@@ -4,7 +4,7 @@ import { useSettings } from "@/lib/settings-context";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { ErrorMessage, LoadingState } from "@/components/content-states";
-import { CALCULATION_METHODS, CITY_MAX_LENGTH, PRAYER_KEYS } from "@/config/prieres";
+import { AFFICHER_HORAIRES_CALCULES, CALCULATION_METHODS, CITY_MAX_LENGTH, PRAYER_KEYS } from "@/config/prieres";
 import { content } from "@/content/fr";
 import { formatLongDate, formatRemaining, methodName, validateCity } from "@/lib/prayer-times";
 import type { usePrayerTimes } from "@/lib/use-prayer-times";
@@ -15,7 +15,7 @@ type PrayerState = ReturnType<typeof usePrayerTimes>;
 /** Texte compact : uniquement à partir de vraies données chargées. */
 export function PrayerSummary({ state }: { state: PrayerState }) {
   const { next } = state;
-  if (!next) return null;
+  if (!AFFICHER_HORAIRES_CALCULES || !next) return null;
   if (next.tomorrow && !next.time) return <span className="mt-3 block text-sm text-foreground">{copy.nextTomorrow}</span>;
   return <span className="mt-3 block text-sm leading-relaxed">
     <span className="block text-muted-foreground">{copy.nextPrayer}</span>
@@ -36,6 +36,7 @@ export function LocationPicker() {
   const [locating, setLocating] = useState(false);
 
   const useGps = () => {
+    if (!AFFICHER_HORAIRES_CALCULES) return;
     setGpsError(null);
     if (!("geolocation" in navigator)) { setGpsError(copy.gpsUnavailable); setShowCity(true); return; }
     setLocating(true);
@@ -54,6 +55,7 @@ export function LocationPicker() {
     setLocation({ kind: "city", city: valid });
   };
 
+  if (!AFFICHER_HORAIRES_CALCULES) return null;
   return <div className="space-y-4">
     <p className="m-0 text-muted-foreground">{copy.locationIntro}</p>
     <div className="flex flex-wrap gap-3">
@@ -77,6 +79,7 @@ export function LocationPicker() {
 
 export function PrayerDetails({ state }: { state: PrayerState }) {
   const id = useId();
+  if (!AFFICHER_HORAIRES_CALCULES) return null;
   if (!state.hydrated) return <LoadingState />;
   if (!state.location) return <LocationPicker />;
 
@@ -130,6 +133,7 @@ export function PrayerDetails({ state }: { state: PrayerState }) {
 export function MethodSelect() {
   const { method, setMethod } = useSettings();
   const id = useId();
+  if (!AFFICHER_HORAIRES_CALCULES) return null;
   return <div className="space-y-2">
     <label htmlFor={id} className="block text-sm text-foreground">{copy.methodLabel}</label>
     <select id={id} value={method} onChange={(e) => setMethod(Number(e.target.value))}

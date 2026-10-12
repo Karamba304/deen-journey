@@ -11,3 +11,7 @@
 - [x] Real AlAdhan prayer times (city/GPS), method selector, local checkboxes, day rollover, errors without fake times.
 # Lot 4
 - [x] Settings page (location + method) with shared settings state; Home card shows read-only method with link.
+
+# Lot 5
+- [x] Disable calculated prayer UI, API and geolocation behind one reversible switch without deleting code.
+- [x] Verify three Home cards, unavailable Settings and tests for both switch states.
