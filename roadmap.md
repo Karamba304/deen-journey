@@ -9,3 +9,5 @@
 - [x] Verify clicks, keyboard toggles, empty states, prayer placeholders and desktop/phone layouts without changing other pages.
 # Lot 3
 - [x] Real AlAdhan prayer times (city/GPS), method selector, local checkboxes, day rollover, errors without fake times.
+# Lot 4
+- [x] Settings page (location + method) with shared settings state; Home card shows read-only method with link.
