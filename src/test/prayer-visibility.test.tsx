@@ -7,6 +7,12 @@ import { SettingsProvider } from "@/lib/settings-context";
 import { SETTINGS_KEY } from "@/lib/settings";
 import { usePrayerTimes } from "@/lib/use-prayer-times";
 import { fetchPrayerTimes } from "@/lib/prayer-times";
+import type { ReactNode } from "react";
+
+vi.mock("@tanstack/react-router", () => ({
+  Link: ({ children, to, className }: { children: ReactNode; to: string; className?: string }) =>
+    <a href={to} className={className}>{children}</a>,
+}));
 
 const feature = vi.hoisted(() => ({ enabled: false }));
 vi.mock("@/config/prieres", async (importOriginal) => {
@@ -85,6 +91,6 @@ describe("Calculated prayer visibility switch", () => {
     await waitFor(() => expect(fetch).toHaveBeenCalled());
     fireEvent.click(prayerCard);
     await waitFor(() => expect(screen.getAllByRole("checkbox")).toHaveLength(5));
-    expect(fetch.mock.calls[0][0]).toContain("address=Paris&method=12");
+    expect(fetch.mock.calls[0]?.[0]).toContain("address=Paris&method=12");
   });
 });
