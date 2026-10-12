@@ -126,22 +126,23 @@ function read(key: string): string | null { try { return window.localStorage.get
 function write(key: string, value: string) { try { window.localStorage.setItem(key, value); } catch { /* stockage indisponible */ } }
 function remove(key: string) { try { window.localStorage.removeItem(key); } catch { /* stockage indisponible */ } }
 
-export function loadLocation(): PrayerLocation | null {
-  try {
-    const value = JSON.parse(read(LOCATION_KEY) ?? "null");
-    if (value?.kind === "city" && typeof value.city === "string" && validateCity(value.city)) return { kind: "city", city: validateCity(value.city)! };
-    if (value?.kind === "gps" && Number.isFinite(value.latitude) && Number.isFinite(value.longitude)) return { kind: "gps", latitude: value.latitude, longitude: value.longitude };
-  } catch { /* valeur illisible */ }
+/** Valide un lieu lu depuis le stockage. */
+export function parseLocation(value: unknown): PrayerLocation | null {
+  const v = value as { kind?: unknown; city?: unknown; latitude?: unknown; longitude?: unknown } | null;
+  if (v?.kind === "city" && typeof v.city === "string") { const city = validateCity(v.city); return city ? { kind: "city", city } : null; }
+  if (v?.kind === "gps" && typeof v.latitude === "number" && typeof v.longitude === "number" && Number.isFinite(v.latitude) && Number.isFinite(v.longitude)) return { kind: "gps", latitude: v.latitude, longitude: v.longitude };
   return null;
 }
-export function saveLocation(location: PrayerLocation) { write(LOCATION_KEY, JSON.stringify(location)); }
-export function clearLocation() { remove(LOCATION_KEY); }
 
-export function loadMethod(): number {
-  const id = Number(read(METHOD_KEY));
-  return read(METHOD_KEY) !== null && isValidMethod(id) ? id : DEFAULT_METHOD_ID;
+/** Anciennes clés (avant le regroupement des réglages), lues uniquement pour la reprise. */
+export function loadLocation(): PrayerLocation | null {
+  try { return parseLocation(JSON.parse(read(LOCATION_KEY) ?? "null")); } catch { return null; }
 }
-export function saveMethod(id: number) { write(METHOD_KEY, String(id)); }
+export function loadMethod(): number {
+  const raw = read(METHOD_KEY);
+  const id = Number(raw);
+  return raw !== null && isValidMethod(id) ? id : DEFAULT_METHOD_ID;
+}
 
 export function loadDone(day: string): PrayerKey[] {
   try {
