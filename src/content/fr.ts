@@ -1,3 +1,5 @@
+import { AFFICHER_HORAIRES_CALCULES } from "@/config/prieres";
+
 export const content = {
   navigation: "Navigation principale",
   skipToContent: "Aller au contenu",
@@ -48,6 +50,7 @@ export const content = {
     teamExplanation: "Explication de l’équipe",
   },
   settings: {
+    unavailable: "Aucun réglage disponible pour le moment. D'autres réglages seront ajoutés au fil des nouvelles fonctionnalités.",
     groupTitle: "Localisation et prières",
     locationLabel: "Lieu",
     currentLocation: "Lieu utilisé :",
@@ -55,7 +58,9 @@ export const content = {
     moreLater: "D'autres réglages seront ajoutés au fil des nouvelles fonctionnalités.",
   },
   pages: {
-    home: { title: "Accueil", description: "Retrouvez ici vos horaires de prière, la sunna du jour, le rappel du jour et votre parcours quotidien." },
+    home: { title: "Accueil", description: AFFICHER_HORAIRES_CALCULES
+      ? "Retrouvez ici vos horaires de prière, la sunna du jour, le rappel du jour et votre parcours quotidien."
+      : "Retrouvez ici la sunna du jour, le rappel du jour et votre parcours quotidien." },
     goal: { title: "Objectif", description: "Définissez et suivez votre objectif personnel." },
     sources: { title: "Sources fiables", description: "Recherchez des textes religieux dans des sources vérifiées." },
     sadaqa: { title: "Sadaqa", description: "Soutenez le projet ou faites un don à une organisation sélectionnée." },

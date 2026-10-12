@@ -5,6 +5,7 @@ import { LoadingState } from "@/components/content-states";
 import { LocationPicker, MethodSelect } from "@/components/prayer-times";
 import { content } from "@/content/fr";
 import { useSettings } from "@/lib/settings-context";
+import { AFFICHER_HORAIRES_CALCULES } from "@/config/prieres";
 
 const copy = content.settings;
 
@@ -23,6 +24,7 @@ function LocationSetting() {
 
 export function SettingsPanel() {
   const { hydrated, location } = useSettings();
+  if (!AFFICHER_HORAIRES_CALCULES) return <p className="mt-10 max-w-2xl text-sm leading-relaxed text-muted-foreground">{copy.unavailable}</p>;
   return <div className="mt-10 max-w-2xl space-y-4">
     <Card className="min-w-0">
       <CardContent className="space-y-8 p-6">

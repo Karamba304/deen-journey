@@ -1,5 +1,7 @@
 export const PRAYER_API_BASE = "https://api.aladhan.com/v1";
 export const PRAYER_API_TIMEOUT_MS = 10_000;
+/** Désactive l'interface, le réseau et la géolocalisation sans retirer le code. */
+export const AFFICHER_HORAIRES_CALCULES = false;
 
 /** Réglage de l'application (méthode personnalisée AlAdhan 99). */
 export const ANGLE_FAJR = 17.5;
